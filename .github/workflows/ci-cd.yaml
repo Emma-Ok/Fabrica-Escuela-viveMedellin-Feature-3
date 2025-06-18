@@ -1,19 +1,18 @@
-name: Next.js CI/CD with SonarCloud
+name: Build and Deploy
 on:
   push:
     branches:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
   build:
     name: Build and Analyze
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -32,8 +31,8 @@ jobs:
           npm run test:ci
           npm run build
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v4
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,9 +44,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
@@ -56,7 +54,4 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          
