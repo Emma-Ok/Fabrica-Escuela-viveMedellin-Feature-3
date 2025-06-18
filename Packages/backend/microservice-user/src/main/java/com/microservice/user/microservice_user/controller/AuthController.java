@@ -6,11 +6,10 @@ import com.microservice.user.microservice_user.dto.RegisterRequest;
 import com.microservice.user.microservice_user.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.Data;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

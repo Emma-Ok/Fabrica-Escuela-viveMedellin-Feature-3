@@ -37,7 +37,11 @@ jobs:
       - name: Install dependencies
         run: |
           cd Packages/frontend
-          npm ci
+          if [ -f "package-lock.json" ]; then
+            npm ci
+          else
+            npm install
+          fi
 
       - name: Run Lint
         run: |
