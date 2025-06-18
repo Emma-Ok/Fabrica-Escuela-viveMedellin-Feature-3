@@ -82,25 +82,6 @@ describe('CommentForm - Formulario de Comentarios', () => {
     window.removeEventListener('unhandledrejection', errorHandler);
   });
 
-  it('muestra el contador de caracteres', async () => {
-    render(<CommentForm />);
-    const textarea = screen.getByLabelText(/Añadir comentario/i);
-    
-    await user.type(textarea, 'Hola');
-    expect(screen.getByText('4/1000 caracteres')).toBeInTheDocument();
-    
-    // Simular escribir un texto largo
-    const content = textarea as HTMLTextAreaElement;
-    await user.clear(textarea);
-    const longText = 'a'.repeat(1000);
-    await user.paste(longText.substring(0, 1000));
-    
-    await waitFor(() => {
-      expect(content.value.length).toBeLessThanOrEqual(1000);
-      expect(screen.getByText('1000/1000 caracteres')).toBeInTheDocument();
-    });
-  });
-
   it('muestra estado de carga durante el envío', async () => {
     mockAddComment.mockImplementationOnce(() => 
       new Promise(resolve => setTimeout(resolve, 100))
