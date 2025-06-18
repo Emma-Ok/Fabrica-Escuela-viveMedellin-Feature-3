@@ -18,22 +18,44 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          submodules: true  # Asegura que se obtengan los submódulos si es necesario
+          submodules: true
+          fetch-depth: 0  # Necessary for SonarCloud to get better analysis
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  # Ajusta según la versión de Node.js que uses
+          node-version: '20'
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: Packages/frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: |
           cd Packages/frontend
-          npm install
+          npm ci
 
       - name: Run Lint
         run: |
           cd Packages/frontend
           npm run lint
+
+      - name: Run Tests with Coverage
+        run: |
+          cd Packages/frontend
+          npm run test:ci
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: Packages/frontend
 
       - name: Build Next.js app
         run: |

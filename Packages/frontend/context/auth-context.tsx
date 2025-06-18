@@ -56,7 +56,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
         // The backend uses 'sub' (subject) for userName and 'userId' claim for the ID
         const userFromToken: User = {
           id: decodedToken.userId?.toString() ?? "",
-          userName: decodedToken.sub || "Usuario", // 'sub' contains the userName from backend
+          userName: decodedToken.sub ?? "Usuario", // 'sub' contains the userName from backend
           email: decodedToken.email ?? "",
         };
         setUser(userFromToken);
@@ -93,7 +93,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     // Use the same logic as in token verification
     const loggedInUser: User = {
       id: decodedToken.userId?.toString() ?? "",
-      userName: decodedToken.sub || userFromLogin.userName || "Usuario", // Prefer 'sub' from token
+      userName: decodedToken.sub ?? userFromLogin.userName ?? "Usuario", // Prefer 'sub' from token
       email: credentials.email,
     };
 

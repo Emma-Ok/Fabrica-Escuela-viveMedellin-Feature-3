@@ -47,7 +47,7 @@ const getUserFromCache = (userId: string): string | null => {
     const cache = localStorage.getItem('commentsUsersCache');
     if (cache) {
       const users = JSON.parse(cache);
-      return users[userId] || null;
+      return users[userId] ?? null;
     }
   } catch (error) {
     console.warn('Error reading user cache:', error);
