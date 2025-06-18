@@ -1,82 +1,53 @@
-name: CI/CD Pipeline for Next.js on Vercel
-
+name: Next.js CI/CD with SonarCloud
 on:
   push:
     branches:
       - main
-      - 'releases/*'
   pull_request:
-    branches:
-      - main
-      - 'releases/*'
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:
+    name: Build and Analyze
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
-          submodules: true
-          fetch-depth: 0  # Necessary for SonarCloud to get better analysis
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: Packages/frontend/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
       - name: Install dependencies
         run: |
           cd Packages/frontend
-          if [ -f "package-lock.json" ]; then
-            npm ci
-          else
-            npm install
-          fi
+          npm install
 
-      - name: Run Lint
+      - name: Run Tests and Build
         run: |
           cd Packages/frontend
           npm run lint
+          npm run test:ci
+          npm run build
 
-      - name: Run Tests with Coverage
-        run: |
-          cd Packages/frontend
-          npm run test:ci      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v5.0.0
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectBaseDir: Packages/frontend
-          args: >
-            -Dsonar.projectKey=Emma-Ok_Fabrica-Escuela-viveMedellin-Feature-3
-            -Dsonar.organization=emmanueludea
-
-      - name: Build Next.js app
-        run: |
-          cd Packages/frontend
-          npm run build
 
   deploy:
-    runs-on: ubuntu-latest
+    name: Deploy to Vercel
     needs: build
-    if: github.ref == 'refs/heads/main'  # Solo despliega en la rama principal
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          submodules: true
+      - uses: actions/checkout@v3
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
