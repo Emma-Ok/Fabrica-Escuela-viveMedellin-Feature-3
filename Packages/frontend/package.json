@@ -7,9 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest",
-    "test:ci": "jest --coverage --coverageReporters=lcov --coverageReporters=text-summary",
-    "test:coverage": "jest --coverage"
+    "test": "jest --watchAll",
+    "test:ci": "jest --ci --coverage --coverageReporters=lcov --coverageReporters=text-summary",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",
