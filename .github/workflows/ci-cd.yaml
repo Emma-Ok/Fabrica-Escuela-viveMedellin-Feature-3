@@ -51,15 +51,16 @@ jobs:
       - name: Run Tests with Coverage
         run: |
           cd Packages/frontend
-          npm run test:ci
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+          npm run test:ci      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectBaseDir: Packages/frontend
+          args: >
+            -Dsonar.projectKey=Emma-Ok_Fabrica-Escuela-viveMedellin-Feature-3
+            -Dsonar.organization=emmanueludea
 
       - name: Build Next.js app
         run: |
