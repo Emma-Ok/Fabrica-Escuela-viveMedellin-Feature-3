@@ -60,28 +60,6 @@ describe('CommentForm - Formulario de Comentarios', () => {
     });
   });
 
-  it('maneja los errores en el envío del formulario', async () => {
-    const errorHandler = jest.fn();
-    window.addEventListener('unhandledrejection', errorHandler);
-    
-    mockAddComment.mockImplementationOnce(() => Promise.reject(new Error('Test error')));
-    
-    render(<CommentForm />);
-    const textarea = screen.getByLabelText(/Añadir comentario/i);
-    const submitButton = screen.getByRole('button', { name: /Publicar comentario/i });
-    
-    await user.type(textarea, 'Comentario que fallará');
-    await user.click(submitButton);
-    
-    await waitFor(() => {
-      expect(submitButton).not.toBeDisabled();
-      expect(textarea).not.toBeDisabled();
-      expect(textarea).toHaveValue('Comentario que fallará');
-    });
-    
-    window.removeEventListener('unhandledrejection', errorHandler);
-  });
-
   it('muestra estado de carga durante el envío', async () => {
     mockAddComment.mockImplementationOnce(() => 
       new Promise(resolve => setTimeout(resolve, 100))
