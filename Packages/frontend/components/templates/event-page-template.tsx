@@ -6,7 +6,6 @@ import CommentsSection from "@/components/organisms/comments-section"
 import EventImage from "@/components/organisms/event-image"
 import SimilarEvents from "@/components/organisms/similar-events"
 import Button from "@/components/atoms/Button"
-import DebugComments from "@/components/molecules/debug-comments"
 import { useAuth } from "@/context/auth-context"
 
 export default function EventPageTemplate() {
@@ -14,7 +13,6 @@ export default function EventPageTemplate() {
 
   return (
     <div className="min-h-screen bg-[#f2f7f5]">
-      <DebugComments />
       <main className="max-w-[1200px] mx-auto px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr,1fr] gap-12">
           <div>
