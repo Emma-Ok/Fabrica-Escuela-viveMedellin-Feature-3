@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import CommentsSection from '../components/organisms/comments-section';
 import { useComments } from '../context/comments-context';
 import { useAuth } from '../context/auth-context';

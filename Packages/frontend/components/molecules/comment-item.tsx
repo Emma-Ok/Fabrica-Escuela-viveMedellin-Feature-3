@@ -75,7 +75,7 @@ function CommentActions({
               <Eye size={16} />
             </IconButton>
           )}
-          {!comment.isHidden && (comment.reportCount || 0) > 0 && (
+          {!comment.isHidden && (comment.reportCount ?? 0) > 0 && (
             <IconButton onClick={onHide} label="Ocultar comentario" variant="secondary">
               <EyeOff size={16} />
             </IconButton>
@@ -201,7 +201,7 @@ export default function CommentItem({ comment, depth = 0 }: CommentItemProps) {
             <Typography variant="caption" color="secondary" className="mb-1">
               {formatDate(comment.createdAt)}
             </Typography>
-            {(comment.reportCount || 0) > 0 && (
+            {(comment.reportCount ?? 0) > 0 && (
               <Typography variant="caption" className="text-orange-600">
                 {comment.reportCount} reporte(s)
               </Typography>
